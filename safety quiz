@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drone Safety Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .quiz-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .question {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+        .options li {
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .feedback {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .score {
+            margin-top: 20px;
+            font-size: 18px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="question" id="question">Loading...</div>
+        <ul class="options" id="options"></ul>
+        <button onclick="nextQuestion()">Next</button>
+        <div class="feedback" id="feedback"></div>
+        <div class="score" id="score"></div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "True or False: You can fly your drone over crowds if you fly at a height of 50 metres or more.",
+                options: ["True", "False"],
+                correct: 1,
+                explanation: "Flying over crowds is not allowed regardless of the height for safety reasons."
+            },
+            {
+                question: "What is the maximum height above ground level you can fly your drone?",
+                options: ["30 metres", "120 metres", "150 metres", "300 metres"],
+                correct: 1,
+                explanation: "The maximum legal height is 120 metres above ground level."
+            },
+            {
+                question: "How close can you fly your drone to other people?",
+                options: ["10 metres", "20 metres", "30 metres", "50 metres"],
+                correct: 2,
+                explanation: "You must keep a minimum distance of 30 metres from people for safety."
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        function loadQuestion() {
+            const questionElement = document.getElementById("question");
+            const optionsElement = document.getElementById("options");
+            const feedbackElement = document.getElementById("feedback");
+            feedbackElement.textContent = ""; // Clear previous feedback
+
+            const currentQuestion = questions[currentQuestionIndex];
+            questionElement.textContent = currentQuestion.question;
+            optionsElement.innerHTML = ""; // Clear previous options
+
+            currentQuestion.options.forEach((option, index) => {
+                const li = document.createElement("li");
+                const button = document.createElement("button");
+                button.textContent = option;
+                button.onclick = () => checkAnswer(index);
+                li.appendChild(button);
+                optionsElement.appendChild(li);
+            });
+        }
+
+        function checkAnswer(selectedOption) {
+            const currentQuestion = questions[currentQuestionIndex];
+            const feedbackElement = document.getElementById("feedback");
+            if (selectedOption === currentQuestion.correct) {
+                score += 0.5; // Each correct answer gives 0.5 marks
+                feedbackElement.textContent = "Correct! " + currentQuestion.explanation;
+                feedbackElement.style.color = "green";
+            } else {
+                feedbackElement.textContent = "Incorrect! " + currentQuestion.explanation;
+                feedbackElement.style.color = "red";
+            }
+        }
+
+        function nextQuestion() {
+            const scoreElement = document.getElementById("score");
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                loadQuestion();
+            } else {
+                scoreElement.textContent = `Quiz Complete! Your Score: ${score} / ${questions.length * 0.5}`;
+                document.getElementById("question").textContent = "";
+                document.getElementById("options").innerHTML = "";
+                document.getElementById("feedback").textContent = "";
+            }
+        }
+
+        // Load the first question
+        loadQuestion();
+    </script>
+</body>
+</html>
